@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\buildMultiTargeting\Kovács_Dominik_backend.props" />
+</Project>
