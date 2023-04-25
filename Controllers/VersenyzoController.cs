@@ -40,16 +40,23 @@ namespace Kovács_Dominik_backend.Controllers
             }
         }
 
-        [HttpPost("EuSkills/addVersenyzo")]
-        public IActionResult addVersenyzo([FromBody] Versenyzo versenyzo)
+        [HttpPost("EuSkills/addVersenyzo/{id}")]
+        public IActionResult addVersenyzo([FromBody] Versenyzo versenyzo,string id)
         {
             using(var context=new euroskillsContext())
             {
                 try
                 {
-                    context.Versenyzos.Add(versenyzo);
-                    context.SaveChanges();
-                    return Ok("Versenyző hozzáadása sikeresen megtörtént!");
+                    if (id == "FKB3F4FEA09CE43C")
+                    {
+                        context.Versenyzos.Add(versenyzo);
+                        context.SaveChanges();
+                        return Ok("Versenyző hozzáadása sikeresen megtörtént!");
+                    }
+                    else
+                    {
+                        return StatusCode(404, "Helytelen azonosító!");
+                    }
                 }
                 catch (Exception ex)
                 {
