@@ -1,0 +1,23 @@
+# For more info on HTTP files go to https://aka.ms/vs/httpfile
+GET https://localhost:7032/EuSkills/GetAll
+
+###
+
+GET https://localhost:7032/EuSkills/GetOrszagNev/Belgium
+
+###
+
+GET https://localhost:7032/EuSkills/GetOrszagNev/Ausztria
+
+###
+
+POST https://localhost:7032/EuSkills/Új-Versenyzõ
+Content-Type application/json
+
+{
+  "id": 0,
+  "nev": "string",
+  "szakmaId": "04",
+  "orszagId": "AT",
+  "pont": 200
+}

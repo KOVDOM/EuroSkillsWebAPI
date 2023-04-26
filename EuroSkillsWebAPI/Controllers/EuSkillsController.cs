@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using EuroSkillsWebAPI.Models;
 using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace EuroSkillsWebAPI.Controllers
 {
@@ -17,6 +18,46 @@ namespace EuroSkillsWebAPI.Controllers
                 try
                 {
                     return Ok(context.Versenyzos.ToList());
+                }
+                catch (Exception ex)
+                {
+                    return BadRequest(ex.Message);
+                }
+            }
+        }
+
+        [HttpGet("GetAll/{id}")]
+        public IActionResult GetByIs(int id)
+        {
+            using (var context = new euroskillsContext())
+            {
+                try
+                {
+                    var result = context.Versenyzos.Where(cx => cx.Id == id).ToList();
+                    if (result.Any())
+                    {
+                        return Ok(result);
+                    }
+                    else
+                    {
+                        return NotFound("Nem létezik!");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    return BadRequest(ex.Message);
+                }
+            }
+        }
+
+        [HttpGet("GetAsNoTracking")]
+        public IActionResult GetAsNoTracking()
+        {
+            using (var context = new euroskillsContext())
+            {
+                try
+                {
+                    return Ok(context.Versenyzos.AsNoTracking().ToList());
                 }
                 catch (Exception ex)
                 {
@@ -88,7 +129,33 @@ namespace EuroSkillsWebAPI.Controllers
                 {
                     context.Versenyzos.Add(versenyzo);
                     context.SaveChanges();
-                    return StatusCode(201, "Új versenyző felvétele megtörtént!");
+                    return StatusCode(201, new {versenyzo.Id });
+                }
+                catch (Exception ex)
+                {
+                    return BadRequest(ex.Message);
+                }
+            }
+        }
+
+        [HttpDelete("Delete/{id}")]
+        public IActionResult Delete(int id)
+        {
+            using(var context=new euroskillsContext())
+            {
+                try
+                {
+                    var versenyzo = context.Versenyzos.FirstOrDefault(v => v.Id == id);
+                    if (versenyzo != null)
+                    {
+                        context.Versenyzos.Remove(versenyzo);
+                        context.SaveChanges();
+                        return StatusCode(201, "Sikeres törlés!");
+                    }
+                    else
+                    {
+                        return NotFound("Nem létezik!");
+                    }
                 }
                 catch (Exception ex)
                 {
