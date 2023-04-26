@@ -50,22 +50,6 @@ namespace EuroSkillsWebAPI.Controllers
             }
         }
 
-        [HttpGet("GetAsNoTracking")]
-        public IActionResult GetAsNoTracking()
-        {
-            using (var context = new euroskillsContext())
-            {
-                try
-                {
-                    return Ok(context.Versenyzos.AsNoTracking().ToList());
-                }
-                catch (Exception ex)
-                {
-                    return BadRequest(ex.Message);
-                }
-            }
-        }
-
         [HttpGet("GetAllData")]
         public IActionResult GetAllData()
         {
