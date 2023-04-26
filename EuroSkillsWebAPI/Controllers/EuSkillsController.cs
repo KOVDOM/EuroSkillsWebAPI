@@ -57,10 +57,17 @@ namespace EuroSkillsWebAPI.Controllers
             {
                 try
                 {
-                    return Ok(context.Versenyzos
-                        .Include(v => v.Szakma)
-                        .Include(v => v.Orszag)
-                        .ToList());
+                    var result = context.Versenyzos
+                .Select(v => new {
+                    v.Id,
+                    v.Nev,
+                    v.Pont,
+                    OrszagNev = v.Orszag.OrszagNev,
+                    SzakmaNev = v.Szakma.SzakmaNev
+                })
+                .ToList();
+
+                    return Ok(result);
                 }
                 catch (Exception ex)
                 {
@@ -74,7 +81,11 @@ namespace EuroSkillsWebAPI.Controllers
         {
             using (var context = new euroskillsContext())
             {
-                var result = from o in context.Orszags join v in context.Versenyzos on o.Id equals v.OrszagId where o.OrszagNev == orszagNev select new { o.OrszagNev, v.Pont };
+                var result = from o in context.Orszags
+                             join v in context.Versenyzos on o.Id equals v.OrszagId
+                             where o.OrszagNev == orszagNev
+                             group v by o.OrszagNev into g
+                             select new { OrszagNev = g.Key, Pont = g.Sum(x => x.Pont) };
                 try
                 {
                     return await result.ToListAsync();
