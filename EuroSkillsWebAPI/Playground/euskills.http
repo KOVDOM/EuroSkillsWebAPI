@@ -21,3 +21,7 @@ Content-Type application/json
   "orszagId": "AT",
   "pont": 200
 }
+
+###
+
+GET https://localhost:7032/EuSkills/GetAll/0213456789
