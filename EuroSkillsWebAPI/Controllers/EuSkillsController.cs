@@ -104,7 +104,12 @@ namespace EuroSkillsWebAPI.Controllers
             {
                 try
                 {
-                    return Ok(context.Versenyzos.Include(v=>v.Orszag).Where(cx=>cx.Orszag.OrszagNev==orszagNev).GroupBy(v => v.Orszag.OrszagNev).Select(g => new { OrszagNev = g.Key, Pont = g.Sum(v => v.Pont) }).ToList());
+                    return Ok(context.Versenyzos
+                        .Include(v=>v.Orszag)
+                        .Where(cx=>cx.Orszag.OrszagNev==orszagNev)
+                        .GroupBy(v => v.Orszag.OrszagNev)
+                        .Select(g => new { OrszagNev = g.Key, Pont = g.Sum(v => v.Pont) })
+                        .ToList());
                 }
                 catch (Exception ex)
                 {
