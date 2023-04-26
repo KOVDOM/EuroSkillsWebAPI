@@ -58,14 +58,14 @@ namespace EuroSkillsWebAPI.Controllers
                 try
                 {
                     var result = context.Versenyzos
-                .Select(v => new {
-                    v.Id,
-                    v.Nev,
-                    v.Pont,
-                    OrszagNev = v.Orszag.OrszagNev,
-                    SzakmaNev = v.Szakma.SzakmaNev
-                })
-                .ToList();
+                    .Select(v => new {
+                        v.Id,
+                        v.Nev,
+                        v.Pont,
+                        OrszagNev = v.Orszag.OrszagNev,
+                        SzakmaNev = v.Szakma.SzakmaNev
+                    })
+                    .ToList();
 
                     return Ok(result);
                 }
@@ -93,6 +93,22 @@ namespace EuroSkillsWebAPI.Controllers
                 catch (Exception ex)
                 {
                     return (IEnumerable<object>)BadRequest(ex.Message);
+                }
+            }
+        }
+
+        [HttpGet("GetOrszagNevLinq/{orszagNev}")]
+        public IActionResult GetOrszagNevLinq(string orszagNev)
+        {
+            using(var context = new euroskillsContext())
+            {
+                try
+                {
+                    return Ok(context.Versenyzos.Include(v=>v.Orszag).Where(cx=>cx.Orszag.OrszagNev==orszagNev).GroupBy(v => v.Orszag.OrszagNev).Select(g => new { OrszagNev = g.Key, Pont = g.Sum(v => v.Pont) }).ToList());
+                }
+                catch (Exception ex)
+                {
+                    return BadRequest(ex.Message);
                 }
             }
         }
